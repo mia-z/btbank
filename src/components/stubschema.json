@@ -10,7 +10,9 @@
       "items": { "$ref": "#/definitions/stub" }
     }
   },
-  "required": ["stubs"],
+  "required": [
+    "stubs"
+  ],
   "definitions": {
     "stub": {
       "title": "Mountebank Stub",
@@ -29,7 +31,9 @@
           "items": { "$ref": "#/definitions/response" }
         }
       },
-      "required": ["responses"]
+      "required": [
+        "responses"
+      ]
     },
     "predicate": {
       "type": "object",
@@ -37,18 +41,27 @@
         "caseSensitive": { "type": "boolean" },
         "except": { "type": "string" },
         "xpath": { "$ref": "#/definitions/xpathSelector" },
-        "jsonpath": { "$ref": "#/definitions/jsonpathSelector" }
+        "jsonpath": { "$ref": "#/definitions/jsonpathSelector" },
+        "equals": { "type": "object" },
+        "deepEquals": { "type": "object" },
+        "contains": { "type": "object" },
+        "startsWith": { "type": "object" },
+        "endsWith": { "type": "object" },
+        "matches": { "type": "object" },
+        "exists": { "type": "object" },
+        "not": { "type": "object" },
+        "inject": { "type": "string" }
       },
       "oneOf": [
-        { "properties": { "equals": { "type": "object" } } },
-        { "properties": { "deepEquals": { "type": "object" } } },
-        { "properties": { "contains": { "type": "object" } } },
-        { "properties": { "startsWith": { "type": "object" } } },
-        { "properties": { "endsWith": { "type": "object" } } },
-        { "properties": { "matches": { "type": "object" } } },
-        { "properties": { "exists": { "type": "object" } } },
-        { "properties": { "not": { "type": "object" } } },
-        { "properties": { "inject": { "type": "string" } } }
+        { "required": ["equals"] },
+        { "required": ["deepEquals"] },
+        { "required": ["contains"] },
+        { "required": ["startsWith"] },
+        { "required": ["endsWith"] },
+        { "required": ["matches"] },
+        { "required": ["exists"] },
+        { "required": ["not"] },
+        { "required": ["inject"] }
       ]
     },
     "response": {
@@ -60,28 +73,11 @@
           "items": {
             "type": "object",
             "oneOf": [
-              {
-                "properties": {
-                  "wait": {
-                    "oneOf": [
-                      { "type": "integer", "minimum": 0 },
-                      { "type": "string" }
-                    ]
-                  }
-                }
-              },
+              { "properties": { "wait": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "string" }] } } },
               { "properties": { "decorate": { "type": "string" } } },
               { "properties": { "shellTransform": { "type": "string" } } },
-              {
-                "properties": {
-                  "copy": { "$ref": "#/definitions/copyBehavior" }
-                }
-              },
-              {
-                "properties": {
-                  "lookup": { "$ref": "#/definitions/lookupBehavior" }
-                }
-              }
+              { "properties": { "copy": { "$ref": "#/definitions/copyBehavior" } } },
+              { "properties": { "lookup": { "$ref": "#/definitions/lookupBehavior" } } }
             ]
           }
         }
@@ -95,18 +91,15 @@
     },
     "isResponse": {
       "type": "object",
-      "properties": { "is": { "type": "object" } },
-      "required": ["is"]
+      "properties": { "is": { "type": "object" } }, "required": ["is"]
     },
     "injectResponse": {
       "type": "object",
-      "properties": { "inject": { "type": "string" } },
-      "required": ["inject"]
+      "properties": { "inject": { "type": "string" } }, "required": ["inject"]
     },
     "faultResponse": {
       "type": "object",
-      "properties": { "fault": { "type": "string" } },
-      "required": ["fault"]
+      "properties": { "fault": { "type": "string" } }, "required": ["fault"]
     },
     "proxyResponse": {
       "type": "object",
@@ -115,10 +108,7 @@
           "type": "object",
           "properties": {
             "to": { "type": "string" },
-            "mode": {
-              "type": "string",
-              "enum": ["proxyOnce", "proxyAlways", "proxyTransparent"]
-            },
+            "mode": { "type": "string", "enum": ["proxyOnce", "proxyAlways", "proxyTransparent"] },
             "predicateGenerators": { "type": "array" },
             "key": { "type": "string" },
             "cert": { "type": "string" },
@@ -142,10 +132,7 @@
         "using": {
           "type": "object",
           "properties": {
-            "method": {
-              "type": "string",
-              "enum": ["regex", "xpath", "jsonpath"]
-            },
+            "method": { "type": "string", "enum": ["regex", "xpath", "jsonpath"] },
             "selector": { "type": "string" }
           },
           "required": ["method", "selector"]
@@ -159,24 +146,24 @@
         "key": {
           "type": "object",
           "properties": {
-            "from": { "oneOf": [{ "type": "string" }, { "type": "object" }] },
+            "from": { "oneOf": [{"type": "string"}, {"type": "object"}]},
             "using": {
-              "type": "object",
-              "properties": {
-                "method": { "type": "string" },
-                "selector": { "type": "string" }
-              },
-              "required": ["method", "selector"]
+                "type": "object",
+                "properties": {
+                  "method": { "type": "string" },
+                  "selector": { "type": "string" }
+                },
+                "required": ["method", "selector"]
             },
-            "index": { "type": "integer" }
+            "index": {"type": "integer"}
           },
           "required": ["from", "using"]
         },
         "fromDataSource": {
           "type": "object",
           "oneOf": [
-            { "properties": { "csv": { "type": "object" } } },
-            { "properties": { "json": { "type": "object" } } }
+            {"properties": {"csv": {"type": "object"}}},
+            {"properties": {"json": {"type": "object"}}}
           ]
         },
         "into": { "type": "string" }
