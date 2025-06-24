@@ -1,0 +1,202 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mountebank Stubs Configuration",
+  "description": "A JSON schema for validating a configuration file containing a list of Mountebank stubs.",
+  "type": "object",
+  "properties": {
+    "stubs": {
+      "description": "A list of Mountebank stubs.",
+      "type": "array",
+      "items": { "$ref": "#/definitions/stub" }
+    }
+  },
+  "required": ["stubs"],
+  "definitions": {
+    "stub": {
+      "title": "Mountebank Stub",
+      "description": "A JSON schema for validating a Mountebank stub, which contains predicates and responses with detailed behaviors.",
+      "type": "object",
+      "properties": {
+        "predicates": {
+          "description": "A list of predicates that must all match for the responses to be served.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/predicate" }
+        },
+        "responses": {
+          "description": "A list of responses to serve in order. At least one response is required.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/response" }
+        }
+      },
+      "required": ["responses"]
+    },
+    "predicate": {
+      "type": "object",
+      "properties": {
+        "caseSensitive": { "type": "boolean" },
+        "except": { "type": "string" },
+        "xpath": { "$ref": "#/definitions/xpathSelector" },
+        "jsonpath": { "$ref": "#/definitions/jsonpathSelector" }
+      },
+      "oneOf": [
+        { "properties": { "equals": { "type": "object" } } },
+        { "properties": { "deepEquals": { "type": "object" } } },
+        { "properties": { "contains": { "type": "object" } } },
+        { "properties": { "startsWith": { "type": "object" } } },
+        { "properties": { "endsWith": { "type": "object" } } },
+        { "properties": { "matches": { "type": "object" } } },
+        { "properties": { "exists": { "type": "object" } } },
+        { "properties": { "not": { "type": "object" } } },
+        { "properties": { "inject": { "type": "string" } } }
+      ]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "repeat": { "type": "integer", "minimum": 1 },
+        "behaviors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "oneOf": [
+              {
+                "properties": {
+                  "wait": {
+                    "oneOf": [
+                      { "type": "integer", "minimum": 0 },
+                      { "type": "string" }
+                    ]
+                  }
+                }
+              },
+              { "properties": { "decorate": { "type": "string" } } },
+              { "properties": { "shellTransform": { "type": "string" } } },
+              {
+                "properties": {
+                  "copy": { "$ref": "#/definitions/copyBehavior" }
+                }
+              },
+              {
+                "properties": {
+                  "lookup": { "$ref": "#/definitions/lookupBehavior" }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "oneOf": [
+        { "$ref": "#/definitions/isResponse" },
+        { "$ref": "#/definitions/proxyResponse" },
+        { "$ref": "#/definitions/injectResponse" },
+        { "$ref": "#/definitions/faultResponse" }
+      ]
+    },
+    "isResponse": {
+      "type": "object",
+      "properties": { "is": { "type": "object" } },
+      "required": ["is"]
+    },
+    "injectResponse": {
+      "type": "object",
+      "properties": { "inject": { "type": "string" } },
+      "required": ["inject"]
+    },
+    "faultResponse": {
+      "type": "object",
+      "properties": { "fault": { "type": "string" } },
+      "required": ["fault"]
+    },
+    "proxyResponse": {
+      "type": "object",
+      "properties": {
+        "proxy": {
+          "type": "object",
+          "properties": {
+            "to": { "type": "string" },
+            "mode": {
+              "type": "string",
+              "enum": ["proxyOnce", "proxyAlways", "proxyTransparent"]
+            },
+            "predicateGenerators": { "type": "array" },
+            "key": { "type": "string" },
+            "cert": { "type": "string" },
+            "passphrase": { "type": "string" },
+            "ciphers": { "type": "string" },
+            "secureProtocol": { "type": "string" },
+            "addWaitBehavior": { "type": "boolean" },
+            "addDecorateBehavior": { "type": "string" },
+            "injectHeaders": { "type": "object" }
+          },
+          "required": ["to"]
+        }
+      },
+      "required": ["proxy"]
+    },
+    "copyBehavior": {
+      "type": "object",
+      "properties": {
+        "from": { "type": "string" },
+        "into": { "type": "string" },
+        "using": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": ["regex", "xpath", "jsonpath"]
+            },
+            "selector": { "type": "string" }
+          },
+          "required": ["method", "selector"]
+        }
+      },
+      "required": ["from", "into", "using"]
+    },
+    "lookupBehavior": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "object",
+          "properties": {
+            "from": { "oneOf": [{ "type": "string" }, { "type": "object" }] },
+            "using": {
+              "type": "object",
+              "properties": {
+                "method": { "type": "string" },
+                "selector": { "type": "string" }
+              },
+              "required": ["method", "selector"]
+            },
+            "index": { "type": "integer" }
+          },
+          "required": ["from", "using"]
+        },
+        "fromDataSource": {
+          "type": "object",
+          "oneOf": [
+            { "properties": { "csv": { "type": "object" } } },
+            { "properties": { "json": { "type": "object" } } }
+          ]
+        },
+        "into": { "type": "string" }
+      },
+      "required": ["key", "fromDataSource", "into"]
+    },
+    "xpathSelector": {
+      "type": "object",
+      "properties": {
+        "selector": { "type": "string" },
+        "ns": { "type": "object" }
+      },
+      "required": ["selector"]
+    },
+    "jsonpathSelector": {
+      "type": "object",
+      "properties": {
+        "selector": { "type": "string" }
+      },
+      "required": ["selector"]
+    }
+  }
+}
