@@ -2,6 +2,7 @@
   import type { Imposter } from "../app";
   import toast from "svelte-french-toast";
   import stubSchema from "./stubschema.json";
+  import { TrashIcon } from "@rgossiaux/svelte-heroicons/outline";
   import {
     JSONEditor,
     Mode,
@@ -9,6 +10,7 @@
     type Content,
     type TextContent
   } from "svelte-jsoneditor";
+  import Trash from "@rgossiaux/svelte-heroicons/outline/Trash";
 
   let { dialogRef = $bindable(), onEditorClose, ...props } = $props();
   let imposter: Imposter | null = $state(null);
@@ -93,15 +95,15 @@
   id="json_editor_modal"
   class="modal p-5"
 >
-  <div class="modal-box min-w-5/6 h-full rounded-2xl p-0">
+  <div class="modal-box min-w-5/6 h-full rounded-xl p-0">
     <div class="grid grid-cols-6 h-full">
       <div
-        class="col-span-2 flex flex-col border-l-2 border-y-2 rounded-bl-2xl rounded-tl-2xl border-zinc-700 p-3 relative"
+        class="col-span-2 flex flex-col  rounded-bl-xl rounded-tl-2l p-3"
       >
-        <div class="prose-lg grow flex flex-col">
+        <div class="prose grow flex flex-col">
           <h2 class="text-center">{imposter?.name}</h2>
-          <div class="rounded-2xl bg-base-200 p-3 py-2">
-            <table class="table">
+          <div class="rounded-xl bg-base-200 p-3 py-2">
+            <table class="table !m-0">
               <tbody>
                 <tr>
                   <td class="font-bold">Port</td>
@@ -134,15 +136,15 @@
         </div>
         <div class="grid grid-cols-8 gap-2">
           <button
-            class="btn btn-error rounded-full col-span-2"
-            onclick={onImposterDelete}>Delete</button
+            class="btn btn-error rounded-full col-span-1 p-0"
+            onclick={onImposterDelete}><div class="w-6 text-zinc-200/80"><TrashIcon/></div></button
           >
           <button
-            class="btn btn-info rounded-full col-span-2"
+            class="btn btn-info rounded-xl col-span-3"
             onclick={() => dialogRef.close()}>Close</button
           >
           <button
-            class="btn btn-secondary rounded-full col-span-4"
+            class="btn btn-secondary rounded-xl col-span-4"
             onclick={() => onImposterSave()}>Save</button
           >
         </div>

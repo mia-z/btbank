@@ -29,10 +29,10 @@
 <div class="flex flex-col">
   <div class="grid grid-cols-4 gap-3">
     <button
-      class="btn btn-secondary rounded-full col-span-3"
+      class="btn btn-secondary rounded-xl shadow-xl col-span-3"
       onclick={() => onNewImposterClick()}>New Imposter</button
     >
-    <button class="btn btn-accent rounded-full col-span-1">Logs</button>
+    <button class="btn btn-accent rounded-xl shadow-xl col-span-1">Logs</button>
   </div>
   <div class="flex mt-3 space-y-3 flex-col">
     {#if imposters?.length > 0}
@@ -40,7 +40,7 @@
         {@render imposter_card(imposter)}
       {/each}
     {:else}
-      <button class="btn btn-info rounded-full" disabled
+      <button class="btn btn-info rounded-xl shadow-xl" disabled
         >No imposters found</button
       >
     {/if}
@@ -60,7 +60,7 @@
 {#snippet imposter_card(imposter: any)}
   {@const { name, protocol, port, numberOfRequests } = imposter}
   <button
-    class="btn btn-info p-1 px-5 shadow-xl h-full open-sans bg-info rounded-full"
+    class="btn btn-info p-1 px-5 shadow-xl h-full open-sans bg-info rounded-xl"
     onclick={() => onImposterCardClick(port)}
   >
     <div class="flex flex-col w-full">
