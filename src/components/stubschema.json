@@ -75,33 +75,20 @@
           "type": "array",
           "items": {
             "type": "object",
-            "oneOf": [
-              {
-                "properties": { "wait": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "string" }] } },
-                "required": ["wait"],
-                "additionalProperties": false
+            "properties": {
+              "wait": {
+                "oneOf": [
+                  { "type": "integer", "minimum": 0 },
+                  { "type": "string" }
+                ]
               },
-              {
-                "properties": { "decorate": { "type": "string" } },
-                "required": ["decorate"],
-                "additionalProperties": false
-              },
-              {
-                "properties": { "shellTransform": { "type": "string" } },
-                "required": ["shellTransform"],
-                "additionalProperties": false
-              },
-              {
-                "properties": { "copy": { "$ref": "#/definitions/copyBehavior" } },
-                "required": ["copy"],
-                "additionalProperties": false
-              },
-              {
-                "properties": { "lookup": { "$ref": "#/definitions/lookupBehavior" } },
-                "required": ["lookup"],
-                "additionalProperties": false
-              }
-            ]
+              "decorate": { "type": "string" },
+              "shellTransform": { "type": "string" },
+              "copy": { "$ref": "#/definitions/copyBehavior" },
+              "lookup": { "$ref": "#/definitions/lookupBehavior" }
+            },
+            "minProperties": 1,
+            "maxProperties": 1
           }
         }
       },
@@ -116,8 +103,16 @@
     "isObject": {
       "type": "object",
       "properties": {
-        "statusCode": { "type": "integer" },
-        "headers": { "type": "object" },
+        "statusCode": {
+          "oneOf": [
+            { "type": "integer" },
+            { "type": "string" }
+          ]
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
         "body": {},
         "_mode": { "type": "string", "enum": ["text", "binary"] }
       },
@@ -143,7 +138,12 @@
     "copyBehavior": {
       "type": "object",
       "properties": {
-        "from": { "type": "string" },
+        "from": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "object" }
+          ]
+        },
         "into": { "type": "string" },
         "using": {
           "type": "object",
