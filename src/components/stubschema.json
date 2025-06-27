@@ -76,11 +76,31 @@
           "items": {
             "type": "object",
             "oneOf": [
-              { "properties": { "wait": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "string" }] } } },
-              { "properties": { "decorate": { "type": "string" } } },
-              { "properties": { "shellTransform": { "type": "string" } } },
-              { "properties": { "copy": { "$ref": "#/definitions/copyBehavior" } } },
-              { "properties": { "lookup": { "$ref": "#/definitions/lookupBehavior" } } }
+              {
+                "properties": { "wait": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "string" }] } },
+                "required": ["wait"],
+                "additionalProperties": false
+              },
+              {
+                "properties": { "decorate": { "type": "string" } },
+                "required": ["decorate"],
+                "additionalProperties": false
+              },
+              {
+                "properties": { "shellTransform": { "type": "string" } },
+                "required": ["shellTransform"],
+                "additionalProperties": false
+              },
+              {
+                "properties": { "copy": { "$ref": "#/definitions/copyBehavior" } },
+                "required": ["copy"],
+                "additionalProperties": false
+              },
+              {
+                "properties": { "lookup": { "$ref": "#/definitions/lookupBehavior" } },
+                "required": ["lookup"],
+                "additionalProperties": false
+              }
             ]
           }
         }
